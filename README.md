@@ -195,3 +195,63 @@ vector<Location> reconstruct_path(
 
 Ce qui peut simplement être testé en exécutant ```test_dijkstra_search()``` dans le main.
 
+### Question 11
+
+L'heuristique donne une évaluation positive quand à le coup restant avant d'arriver au but. Plusieurs solutions sont possible. Étant dans une grille 2d, j'ai choisi la **distance euclidienne**.
+
+```c++
+inline double heuristic(SquareGrid::Location a, SquareGrid::Location b) {
+    int x = abs(std::get<0>(a)-std::get<0>(b));
+    int y = abs(std::get<1>(b)-std::get<1>(b));
+    return sqrt(x*x+y+y);
+}
+```
+
+### Question 12
+
+```c++
+template<typename Graph>
+void a_star_search
+(Graph graph,
+ typename Graph::Location start,
+ typename Graph::Location goal,
+ unordered_map<typename Graph::Location, typename Graph::Location>& came_from,
+ unordered_map<typename Graph::Location, int>& cost_so_far)
+{
+    typedef typename Graph::Location Location;
+
+    // Init vars
+    PriorityQueue<Location> frontier;
+    Location current;
+    Location neighbor;
+    int nCost;
+    vector<Location> currentNeighbors;
+
+    // Set vars
+    frontier.put(start, 0);
+    came_from[start] = start;
+    cost_so_far[start] = 0;
+
+    while (!frontier.empty()) {
+        current = frontier.get();
+
+        if (current == goal)
+            break;
+        
+        currentNeighbors = graph.neighbors(current);
+
+        for(auto neighbor : currentNeighbors) {
+            nCost = graph.cost(current,neighbor) + cost_so_far[current];
+
+            if ((!came_from.count(neighbor)) || (nCost < cost_so_far[neighbor])) {
+                frontier.put(neighbor, nCost+heuristic(neighbor,goal));
+                cost_so_far[neighbor] = nCost;
+                came_from[neighbor] = current;
+            }
+        }
+    }
+}
+```
+
+Ce qui peut simplement être testé en exécutant ```test_a_star_search()``` dans le main.
+

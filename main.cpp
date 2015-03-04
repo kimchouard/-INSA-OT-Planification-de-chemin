@@ -312,7 +312,6 @@ void dijkstra_search
  unordered_map<typename Graph::Location, int>& cost_so_far)
 {
 
-
     //+-----------------------------+//
     //          Question 9           //
     //+-----------------------------+//
@@ -417,6 +416,42 @@ void a_star_search
  unordered_map<typename Graph::Location, int>& cost_so_far)
 {
 
+    //+-----------------------------+//
+    //          Question 12          //
+    //+-----------------------------+//
+
+    typedef typename Graph::Location Location;
+
+    // Init vars
+    PriorityQueue<Location> frontier;
+    Location current;
+    Location neighbor;
+    int nCost;
+    vector<Location> currentNeighbors;
+
+    // Set vars
+    frontier.put(start, 0);
+    came_from[start] = start;
+    cost_so_far[start] = 0;
+
+    while (!frontier.empty()) {
+        current = frontier.get();
+
+        if (current == goal)
+            break;
+        
+        currentNeighbors = graph.neighbors(current);
+
+        for(auto neighbor : currentNeighbors) {
+            nCost = graph.cost(current,neighbor) + cost_so_far[current];
+
+            if ((!came_from.count(neighbor)) || (nCost < cost_so_far[neighbor])) {
+                frontier.put(neighbor, nCost+heuristic(neighbor,goal));
+                cost_so_far[neighbor] = nCost;
+                came_from[neighbor] = current;
+            }
+        }
+    }
 }
 
 int test_a_star_search() {
@@ -453,9 +488,8 @@ int main( int argc, const char* argv[] )
     // test_breadth_first_search();
 
     // TEST 2
-    test_dijkstra_search();
+    // test_dijkstra_search();
 
-    // SquareGrid::Location start{1, 4};
-    // SquareGrid::Location goal{8, 5};
-    // heuristic(start, goal);
+    // TEST 3
+    test_a_star_search();
 }
