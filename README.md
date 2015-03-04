@@ -1,5 +1,5 @@
 # [INSA] OT Robots - Compte Rendu
-## *Planification-de-chemin*
+## *Planification de chemin*
 
 
 Compte rendu pour le TP de planification de chemin dans le cadre de l'OT Robots de l'INSA de Lyon.
@@ -13,12 +13,6 @@ breadth_first_search(Graph graph,
                      typename Graph::Location start,
                      typename Graph::Location goal)
 {
-
-
-    //+-----------------------------+//
-    //          Question 3           //
-    //+-----------------------------+//
-
     typedef typename Graph::Location Location;
 
     // Init vars
@@ -85,7 +79,17 @@ int main( int argc, const char* argv[] )
 }
 ```
 
-TODO OUTPUT
+Ce qui doit donner:
+
+```
+{
+	E -> { B },
+	D -> { E A },
+	C -> { A },
+	B -> { A C D },
+	A -> { B },
+}
+```
 
 ### Question 5
 
@@ -112,7 +116,11 @@ auto parents = breadth_first_search(example_graph, 'A', 'E');
 example_graph.draw(parents, 'A', 'E');
 ```
 
-TODO OUTPUT
+Ce qui doit donner:
+
+```
+End <- E <- D <- B <- A <- Begin
+```
 
 ### Question 9
 
@@ -125,10 +133,6 @@ void dijkstra_search
  unordered_map<typename Graph::Location, typename Graph::Location>& came_from,
  unordered_map<typename Graph::Location, int>& cost_so_far)
 {
-
-    //+-----------------------------+//
-    //          Question 9	         //
-    //+-----------------------------+//
 
 	typedef typename Graph::Location Location;
 
@@ -177,25 +181,19 @@ vector<Location> reconstruct_path(
                                   unordered_map<Location, Location>& came_from
                                   ) {
     vector<Location> path;
-
-
-    //+-----------------------------+//
-    //	    	Question 10		     //
-    //+-----------------------------+//
 	
-	cout<<"End <- "<<goal<<" <- ";
 
 	Location newNode = came_from[goal];
 	Location node;
 	while (newNode != node) {
 		node = newNode;
 		path.push_back(node);
-		cout<<node<<" <- ";
 		newNode = came_from[node];
 	}
-
-	cout<<"Begin"<<endl;
 
     return path;
 }
 ```
+
+Ce qui peut simplement être testé en exécutant ```test_dijkstra_search()``` dans le main.
+
