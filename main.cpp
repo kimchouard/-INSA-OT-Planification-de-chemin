@@ -394,6 +394,7 @@ int test_dijkstra_search(int xS, int yS, int xG, int yG) {
     int size;
     vector<SquareGrid::Location> path = reconstruct_path(start, goal, came_from);
     draw_grid(grid, 3, nullptr, nullptr, &path);
+    return cost_so_far[goal];
 }
 
 inline double heuristic(SquareGrid::Location a, SquareGrid::Location b) {
@@ -467,6 +468,7 @@ int test_a_star_search(int xS, int yS, int xG, int yG) {
     std::cout << std::endl;
     vector<SquareGrid::Location> path = reconstruct_path(start, goal, came_from);
     draw_grid(grid, 3, nullptr, nullptr, &path);
+    return cost_so_far[goal];
 }
 
 
