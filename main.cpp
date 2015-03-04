@@ -31,6 +31,8 @@ using std::pair;
 using std::tuple;
 using std::tie;
 using std::string;
+using std::cout;
+using std::endl;
 
 template<typename L>
 struct Graph {
@@ -40,6 +42,43 @@ struct Graph {
     
     inline const vector<Location>  neighbors(Location id) {
         return edges[id];
+    }
+
+    //+-----------------------------+//
+    //      Question 4, Part 1       //
+    //+-----------------------------+//
+
+    void draw() {
+        cout<<"{"<<endl;
+        
+        pair<Location, vector<Location> > node;
+        vector<Location> nodeEdges;
+        for (auto node: edges) {
+            cout<<"\t"<<node.first<<" -> { ";
+
+            for (auto nodeEdges: node.second)
+                cout<<nodeEdges<<" ";
+
+            cout<<"},"<<endl;
+        }
+
+        cout<<"}"<<endl;
+    }
+
+    //+-----------------------------+//
+    //      Question 5, Part 1       //
+    //+-----------------------------+//
+
+    void draw(unordered_map<Location, Location> itinary, Location start, Location goal) {
+        cout<<"End <- "<<goal<<" <- ";
+        Location newNode = itinary[goal];
+        Location node;
+        while (newNode != node) {
+            node = newNode;
+            cout<<node<<" <- ";
+            newNode = itinary[node];
+        }
+        cout<<"Begin"<<endl;
     }
 };
 
@@ -216,11 +255,43 @@ template<typename Graph>
 unordered_map<typename Graph::Location, typename Graph::Location>
 breadth_first_search(Graph graph,
                      typename Graph::Location start,
-                     typename Graph::Location goal) {
- 
+                     typename Graph::Location goal)
+{
+
+
     //+-----------------------------+//
-    //          A completer          //
+    //          Question 3           //
     //+-----------------------------+//
+
+    typedef typename Graph::Location Location;
+
+    // Init vars
+    queue<Location> frontier;
+    unordered_map <Location, Location> came_from;
+    Location current;
+    Location neighbor;
+    vector<Location> currentNeighbors;
+
+    // Set vars
+    frontier.push(start);
+    came_from[start] = start;
+
+    while (!frontier.empty()) {
+        current = frontier.front();
+        frontier.pop();
+
+        if (current == goal)
+            break;
+        
+        currentNeighbors = graph.neighbors(current);
+
+        for(auto neighbor : currentNeighbors) {
+            if (!came_from.count(neighbor)) {
+                frontier.push(neighbor);
+                came_from[neighbor] = current;
+            }
+        }
+    }
 
     return came_from;
 }
@@ -241,10 +312,74 @@ void dijkstra_search
  unordered_map<typename Graph::Location, int>& cost_so_far)
 {
 
+
     //+-----------------------------+//
-    //          A completer          //
+    //          Question 9           //
+    //+-----------------------------+//
+
+    typedef typename Graph::Location Location;
+
+    // Init vars
+    queue<Location> frontier;
+    Location current;
+    Location neighbor;
+    int nCost;
+    vector<Location> currentNeighbors;
+
+    // Set vars
+    frontier.push(start);
+    came_from[start] = start;
+    cost_so_far[start] = 0;
+
+    while (!frontier.empty()) {
+        current = frontier.front();
+        frontier.pop();
+
+        if (current == goal)
+            break;
+        
+        currentNeighbors = graph.neighbors(current);
+
+        for(auto neighbor : currentNeighbors) {
+            nCost = graph.cost(current,neighbor) + cost_so_far[current];
+
+            if ((!came_from.count(neighbor)) || (nCost < cost_so_far[neighbor])) {
+                frontier.push(neighbor);
+                cost_so_far[neighbor] = nCost;
+                came_from[neighbor] = current;
+            }
+        }
+    }
+}
+
+
+template<typename Location>
+vector<Location> reconstruct_path(
+                                  Location start,
+                                  Location goal,
+                                  unordered_map<Location, Location>& came_from
+                                  ) {
+    vector<Location> path;
+
+
+    //+-----------------------------+//
+    //          Question 10          //
     //+-----------------------------+//
     
+    cout<<"End <- "<<goal<<" <- ";
+
+    Location newNode = came_from[goal];
+    Location node;
+    while (newNode != node) {
+        node = newNode;
+        path.push_back(node);
+        cout<<node<<" <- ";
+        newNode = came_from[node];
+    }
+
+    cout<<"Begin"<<endl;
+
+    return path;
 }
 
 
@@ -261,22 +396,6 @@ int test_dijkstra_search() {
     std::cout << std::endl;
     vector<SquareGrid::Location> path = reconstruct_path(start, goal, came_from);
     draw_grid(grid, 3, nullptr, nullptr, &path);
-}
-
-
-template<typename Location>
-vector<Location> reconstruct_path(
-                                  Location start,
-                                  Location goal,
-                                  unordered_map<Location, Location>& came_from
-                                  ) {
-    vector<Location> path;
-
-    //+-----------------------------+//
-    //          A completer          //
-    //+-----------------------------+//
-
-    return path;
 }
 
 inline int heuristic(SquareGrid::Location a, SquareGrid::Location b) {
@@ -313,4 +432,26 @@ int test_a_star_search() {
     std::cout << std::endl;
     vector<SquareGrid::Location> path = reconstruct_path(start, goal, came_from);
     draw_grid(grid, 3, nullptr, nullptr, &path);
+}
+
+
+
+int main( int argc, const char* argv[] )
+{
+    //+-----------------------------+//
+    //      Question 5, Part 2       //
+    //+-----------------------------+//
+    example_graph.draw();
+
+    //+-----------------------------+//
+    //      Question 5, Part 2       //
+    //+-----------------------------+//
+    auto parents = breadth_first_search(example_graph, 'A', 'E');
+    example_graph.draw(parents, 'A', 'E');
+
+    // TEST 1
+    test_breadth_first_search();
+
+    // TEST 2
+    test_dijkstra_search();
 }
