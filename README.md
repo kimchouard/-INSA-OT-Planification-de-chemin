@@ -267,5 +267,40 @@ L'heuristique sert à donner une évaluation grossière sur le coût nécessaire
 
 ### Question 14
 
-Je n'ai pas vraiment testé les perfomances algorithmiques mais plutôt vérifié que les Dijkstra et A* on la même efficacité en utilisant le cout cumulé.
+Je n'ai pas vraiment testé les perfomances algorithmiques mais plutôt vérifié que les Dijkstra et A* on la même efficacité en utilisant le cout cumulé. Le BFS quand à lui est bien moins efficace.
 
+Moyenne:
+
+- BFS: 32767
+- Dijkstra: 10.2636
+- A*: 10.2636
+
+```c++
+void compare_algos() {
+    // Structure pour stocker les différents couts
+    vector<int> bfs_costs;
+    vector<int> dijkstra_costs;
+    vector<int> a_star_costs;
+
+    // Parcours de toutes les possibilités et application des diff. algos
+    for (int yS = 0; yS != 10; ++yS) {
+        for (int xS = 0; xS != 10; ++xS) {
+            for (int yG = 0; yG != 10; ++yG) {
+                for (int xG = 0; xG != 10; ++xG) {
+                    bfs_costs.push_back(test_breadth_first_search(xS, yS, xG, yG));
+                    dijkstra_costs.push_back(test_dijkstra_search(xS, yS, xG, yG));
+                    a_star_costs.push_back(test_a_star_search(xS, yS, xG, yG));
+                }
+            }
+        }
+    }
+
+    double bfs_costs_sum = std::accumulate(bfs_costs.begin(), bfs_costs.end(), 0.0);
+    double bfs_costs_mean = bfs_costs_sum / bfs_costs.size();
+    double dijkstra_costs_sum = std::accumulate(dijkstra_costs.begin(), dijkstra_costs.end(), 0.0);
+    double dijkstra_costs_mean = dijkstra_costs_sum / dijkstra_costs.size();
+    double a_star_costs_sum = std::accumulate(a_star_costs.begin(), a_star_costs.end(), 0.0);
+    double a_star_costs_mean = a_star_costs_sum / a_star_costs.size();
+
+    cout<<bfs_costs_mean<<" "<<dijkstra_costs_mean<<" "<<a_star_costs_mean<<endl;
+}
