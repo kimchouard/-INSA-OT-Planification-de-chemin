@@ -19,7 +19,9 @@
 #include <utility>
 #include <queue>
 #include <tuple>
+#include <numeric>
 #include <algorithm>
+
 
 using std::unordered_map;
 using std::unordered_set;
@@ -33,6 +35,7 @@ using std::tie;
 using std::string;
 using std::cout;
 using std::endl;
+using std::accumulate;
 
 template<typename L>
 struct Graph {
@@ -296,9 +299,9 @@ breadth_first_search(Graph graph,
     return came_from;
 }
 
-int test_breadth_first_search() {
+int test_breadth_first_search(int xS, int yS, int xG, int yG) {
     SquareGrid grid = make_diagram1();
-    auto parents = breadth_first_search(grid, SquareGrid::Location{8, 7}, SquareGrid::Location{17, 2});
+    auto parents = breadth_first_search(grid, SquareGrid::Location{xS, yS}, SquareGrid::Location{xG, yG});
     draw_grid(grid, 2, nullptr, &parents);
 }
 
@@ -471,6 +474,35 @@ int test_a_star_search(int xS, int yS, int xG, int yG) {
     return cost_so_far[goal];
 }
 
+void compare_algos() {
+    // Structure pour stocker les différents couts
+    vector<int> bfs_costs;
+    vector<int> dijkstra_costs;
+    vector<int> a_star_costs;
+
+    // Parcours de toutes les possibilités et application des diff. algos
+    for (int yS = 0; yS != 10; ++yS) {
+        for (int xS = 0; xS != 10; ++xS) {
+            for (int yG = 0; yG != 10; ++yG) {
+                for (int xG = 0; xG != 10; ++xG) {
+                    bfs_costs.push_back(test_breadth_first_search(xS, yS, xG, yG));
+                    dijkstra_costs.push_back(test_dijkstra_search(xS, yS, xG, yG));
+                    a_star_costs.push_back(test_a_star_search(xS, yS, xG, yG));
+                }
+            }
+        }
+    }
+
+    double bfs_costs_sum = std::accumulate(bfs_costs.begin(), bfs_costs.end(), 0.0);
+    double bfs_costs_mean = bfs_costs_sum / bfs_costs.size();
+    double dijkstra_costs_sum = std::accumulate(dijkstra_costs.begin(), dijkstra_costs.end(), 0.0);
+    double dijkstra_costs_mean = dijkstra_costs_sum / dijkstra_costs.size();
+    double a_star_costs_sum = std::accumulate(a_star_costs.begin(), a_star_costs.end(), 0.0);
+    double a_star_costs_mean = a_star_costs_sum / a_star_costs.size();
+
+    cout<<bfs_costs_mean<<" "<<dijkstra_costs_mean<<" "<<a_star_costs_mean<<endl;
+}
+
 
 int main( int argc, const char* argv[] )
 {
@@ -486,11 +518,16 @@ int main( int argc, const char* argv[] )
     // example_graph.draw(parents, 'A', 'E');
 
     // TEST 1
-    // test_breadth_first_search();
+    // test_breadth_first_search(8,7,17,2);
+
 
     // TEST 2
-    test_dijkstra_search(1,4,8,5);
+    // test_dijkstra_search(1,4,8,5);
 
     // TEST 3
-    test_a_star_search(1,4,8,5);
+    // test_a_star_search(1,4,8,5);
+
+    // MEGA TEST!!
+    compare_algos();
+
 }

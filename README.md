@@ -267,3 +267,5 @@ L'heuristique sert à donner une évaluation grossière sur le coût nécessaire
 
 ### Question 14
 
+Je n'ai pas vraiment testé les perfomances algorithmiques mais plutôt vérifié que les Dijkstra et A* on la même efficacité en utilisant le cout cumulé.
+
