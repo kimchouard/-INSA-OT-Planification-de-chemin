@@ -109,6 +109,8 @@ void draw(unordered_map<Location, Location> itinary, Location start, Location go
 }
 ```
 
+On voit que l'algorithme part du goal pour remonter noeud par noeud jusqu'à arriver au point de départ.
+
 Enfin, ajouter ces quelques lignes dans le main afin d'exécuter le code:
 
 ```c++
@@ -123,6 +125,8 @@ End <- E <- D <- B <- A <- Begin
 ```
 
 ### Question 9
+
+La principale différence ici intervient par l'ajout de la gestion des couts (cost_so_far...) et dans l'utilisation de la PriorityQueue.
 
 ```c++
 template<typename Graph>
@@ -169,6 +173,8 @@ void dijkstra_search
 ```
 
 ### Question 10
+
+Assez simple car utilisant la même méthode que question 5.
 
 ```c++
 
@@ -254,4 +260,10 @@ void a_star_search
 ```
 
 Ce qui peut simplement être testé en exécutant ```test_a_star_search()``` dans le main.
+
+### Question 13
+
+L'heuristique sert à donner une évaluation grossière sur le coût nécessaire pour arriver à destination, et ce bien sûr, en fonction du point demandé. Cela pert tout son sens dans un cas particulier de la fonction heuristique. Mettons que l'on choisisse une **fonction heuristique constante**, elle ne permettra plus de faire la différence entre les points. Les algorithmes de Dijkstra et A* deviennent alors équivalent.
+
+### Question 14
 

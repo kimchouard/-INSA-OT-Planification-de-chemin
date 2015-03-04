@@ -355,8 +355,7 @@ template<typename Location>
 vector<Location> reconstruct_path(
                                   Location start,
                                   Location goal,
-                                  unordered_map<Location, Location>& came_from
-                                  ) {
+                                  unordered_map<Location, Location>& came_from) {
     vector<Location> path;
 
 
@@ -381,10 +380,10 @@ vector<Location> reconstruct_path(
 }
 
 
-int test_dijkstra_search() {
+int test_dijkstra_search(int xS, int yS, int xG, int yG) {
     GridWithWeights grid = make_diagram4();
-    SquareGrid::Location start{1, 4};
-    SquareGrid::Location goal{8, 5};
+    SquareGrid::Location start{xS, yS};
+    SquareGrid::Location goal{xG, yG};
     unordered_map<SquareGrid::Location, SquareGrid::Location> came_from;
     unordered_map<SquareGrid::Location, int> cost_so_far;
     dijkstra_search(grid, start, goal, came_from, cost_so_far);
@@ -392,6 +391,7 @@ int test_dijkstra_search() {
     std::cout << std::endl;
     draw_grid(grid, 3, &cost_so_far, nullptr);
     std::cout << std::endl;
+    int size;
     vector<SquareGrid::Location> path = reconstruct_path(start, goal, came_from);
     draw_grid(grid, 3, nullptr, nullptr, &path);
 }
@@ -454,10 +454,10 @@ void a_star_search
     }
 }
 
-int test_a_star_search() {
+int test_a_star_search(int xS, int yS, int xG, int yG) {
     GridWithWeights grid = make_diagram4();
-    SquareGrid::Location start{1, 4};
-    SquareGrid::Location goal{8, 5};
+    SquareGrid::Location start{xS, yS};
+    SquareGrid::Location goal{xG, yG};
     unordered_map<SquareGrid::Location, SquareGrid::Location> came_from;
     unordered_map<SquareGrid::Location, int> cost_so_far;
     a_star_search(grid, start, goal, came_from, cost_so_far);
@@ -468,7 +468,6 @@ int test_a_star_search() {
     vector<SquareGrid::Location> path = reconstruct_path(start, goal, came_from);
     draw_grid(grid, 3, nullptr, nullptr, &path);
 }
-
 
 
 int main( int argc, const char* argv[] )
@@ -488,8 +487,8 @@ int main( int argc, const char* argv[] )
     // test_breadth_first_search();
 
     // TEST 2
-    // test_dijkstra_search();
+    test_dijkstra_search(1,4,8,5);
 
     // TEST 3
-    test_a_star_search();
+    test_a_star_search(1,4,8,5);
 }
