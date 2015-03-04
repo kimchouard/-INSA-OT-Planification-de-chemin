@@ -320,20 +320,19 @@ void dijkstra_search
     typedef typename Graph::Location Location;
 
     // Init vars
-    queue<Location> frontier;
+    PriorityQueue<Location> frontier;
     Location current;
     Location neighbor;
     int nCost;
     vector<Location> currentNeighbors;
 
     // Set vars
-    frontier.push(start);
+    frontier.put(start, 0);
     came_from[start] = start;
     cost_so_far[start] = 0;
 
     while (!frontier.empty()) {
-        current = frontier.front();
-        frontier.pop();
+        current = frontier.get();
 
         if (current == goal)
             break;
@@ -344,7 +343,7 @@ void dijkstra_search
             nCost = graph.cost(current,neighbor) + cost_so_far[current];
 
             if ((!came_from.count(neighbor)) || (nCost < cost_so_far[neighbor])) {
-                frontier.push(neighbor);
+                frontier.put(neighbor, nCost);
                 cost_so_far[neighbor] = nCost;
                 came_from[neighbor] = current;
             }
@@ -398,10 +397,15 @@ int test_dijkstra_search() {
     draw_grid(grid, 3, nullptr, nullptr, &path);
 }
 
-inline int heuristic(SquareGrid::Location a, SquareGrid::Location b) {
+inline double heuristic(SquareGrid::Location a, SquareGrid::Location b) {
+
     //+-----------------------------+//
-    //          A completer          //
+    //          Question 11          //
     //+-----------------------------+//
+
+    int x = abs(std::get<0>(a)-std::get<0>(b));
+    int y = abs(std::get<1>(b)-std::get<1>(b));
+    return sqrt(x*x+y+y);
 }
 
 template<typename Graph>
@@ -412,10 +416,6 @@ void a_star_search
  unordered_map<typename Graph::Location, typename Graph::Location>& came_from,
  unordered_map<typename Graph::Location, int>& cost_so_far)
 {
-
-    //+-----------------------------+//
-    //          A completer          //
-    //+-----------------------------+//
 
 }
 
@@ -441,17 +441,21 @@ int main( int argc, const char* argv[] )
     //+-----------------------------+//
     //      Question 5, Part 2       //
     //+-----------------------------+//
-    example_graph.draw();
+    // example_graph.draw();
 
     //+-----------------------------+//
     //      Question 5, Part 2       //
     //+-----------------------------+//
-    auto parents = breadth_first_search(example_graph, 'A', 'E');
-    example_graph.draw(parents, 'A', 'E');
+    // auto parents = breadth_first_search(example_graph, 'A', 'E');
+    // example_graph.draw(parents, 'A', 'E');
 
     // TEST 1
-    test_breadth_first_search();
+    // test_breadth_first_search();
 
     // TEST 2
     test_dijkstra_search();
+
+    // SquareGrid::Location start{1, 4};
+    // SquareGrid::Location goal{8, 5};
+    // heuristic(start, goal);
 }

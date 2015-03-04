@@ -133,39 +133,37 @@ void dijkstra_search
  unordered_map<typename Graph::Location, typename Graph::Location>& came_from,
  unordered_map<typename Graph::Location, int>& cost_so_far)
 {
+    typedef typename Graph::Location Location;
 
-	typedef typename Graph::Location Location;
-
- 	// Init vars
-    queue<Location> frontier;
+    // Init vars
+    PriorityQueue<Location> frontier;
     Location current;
     Location neighbor;
     int nCost;
     vector<Location> currentNeighbors;
 
     // Set vars
-    frontier.push(start);
+    frontier.put(start, 0);
     came_from[start] = start;
     cost_so_far[start] = 0;
 
     while (!frontier.empty()) {
-    	current = frontier.front();
-    	frontier.pop();
+        current = frontier.get();
 
-    	if (current == goal)
-    		break;
-    	
-    	currentNeighbors = graph.neighbors(current);
+        if (current == goal)
+            break;
+        
+        currentNeighbors = graph.neighbors(current);
 
-    	for(auto neighbor : currentNeighbors) {
-    		nCost = graph.cost(current,neighbor) + cost_so_far[current];
+        for(auto neighbor : currentNeighbors) {
+            nCost = graph.cost(current,neighbor) + cost_so_far[current];
 
-    		if ((!came_from.count(neighbor)) || (nCost < cost_so_far[neighbor])) {
-    			frontier.push(neighbor);
-    			cost_so_far[neighbor] = nCost;
-    			came_from[neighbor] = current;
-    		}
-    	}
+            if ((!came_from.count(neighbor)) || (nCost < cost_so_far[neighbor])) {
+                frontier.put(neighbor, nCost);
+                cost_so_far[neighbor] = nCost;
+                came_from[neighbor] = current;
+            }
+        }
     }
 }
 ```
